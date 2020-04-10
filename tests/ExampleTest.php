@@ -2,10 +2,7 @@
 
 namespace Gpx2Png\Test;
 
-class ExampleTest extends \PHPUnit_Framework_TestCase
-{
-
-
+class ExampleTest extends \PHPUnit_Framework_TestCase{
     /**
      * Test that true does in fact equal true
      */
