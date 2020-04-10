@@ -1,0 +1,40 @@
+{
+    "name": "knyazevdev/gpx2png",
+    "description": "Gpx and track to image on OSM and other tiles",
+    "keywords": [
+        "gpx2png",
+        "track2png",
+        "gpx2image",
+        "gpx2osm"
+    ],
+    "homepage": "https://github.com/knyazevdev/gpx2png",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":Alexey Knyazev",
+            "email": "alexey.knyaz@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=5.5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gpx2Png\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gpx2Png\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
