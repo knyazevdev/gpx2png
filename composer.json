@@ -39,6 +39,5 @@
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "RC",
-    "prefer-stable": true
+    "minimum-stability": "RC"
 }
