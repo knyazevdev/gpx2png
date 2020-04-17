@@ -50,6 +50,6 @@ class Result
     public function data()
     {
         $this->prepare();
-        $this->image->palette->toString();
+        return $this->image->palette->toString();
     }
 }
