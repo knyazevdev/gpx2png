@@ -35,10 +35,10 @@ class DrawParamsPoint
                 break;
             case self::TPL_LIVE_POINT:
                 $this->radius = 8;
-                $this->color = "lightblue";
+                $this->color = "orange";
                 $this->border_width = 3;
                 $this->border_color = "#FFF";
-                $this->opacity = 0.4;
+                $this->opacity = 1;
                 break;
         }
     }

@@ -133,10 +133,10 @@ class Osm extends TileMapSource {
         $lat_direction_sign = $right_bottom_tile->y > $left_top_tile->y ? 1 : -1;
         $lon_direction_sign = $right_bottom_tile->x > $left_top_tile->x ? 1 : -1;
 
-        $mapImage->leftTopPoint = $this->getPointByTile($left_top_tile);
-        $mapImage->rightBottomPoint = $this->getPointByTile(new Tile($right_bottom_tile->x+$lon_direction_sign*1, $right_bottom_tile->y+$lat_direction_sign*1, $right_bottom_tile->z));
-
-        $mapImage->updatePixelLatLonParams();
+        $mapImage->setBoundPoints(
+            $this->getPointByTile($left_top_tile),
+            $this->getPointByTile(new Tile($right_bottom_tile->x+$lon_direction_sign*1, $right_bottom_tile->y+$lat_direction_sign*1, $right_bottom_tile->z))
+        );
 
         return $mapImage;
     }

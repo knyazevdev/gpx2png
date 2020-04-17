@@ -8,6 +8,7 @@ use Gpx2Png\Models\ImageParams;
 use Gpx2Png\Models\Result;
 use Gpx2Png\Models\Track;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 class Gpx2Png
@@ -41,9 +42,10 @@ class Gpx2Png
 
     public function setMapSourceName($name){
         $this->mapSourceName = $name;
+        $this->initMapSource();
     }
 
-    public function initMapSource(){
+    private function initMapSource(){
         if (preg_match_all("/_(\w{1})/", $this->mapSourceName, $matches)){
             foreach ($matches[0] as $i => $item) {
                 $this->mapSourceName = str_replace("_".$matches[1][$i], strtoupper($matches[1][$i]), $this->mapSourceName);
@@ -62,6 +64,21 @@ class Gpx2Png
         $this->track = $source->getTrack();
     }
 
+    public function getTrack(){
+        return $this->track;
+    }
+
+    public function loadPoints($points)
+    {
+        if (count($points) == 0){
+            throw new InvalidArgumentException('Invalid points format');
+        }
+
+        $track = new Track();
+        $track->points = $points;
+        $this->track = $track;
+    }
+
     public function generateImage(){
         if (!$this->mapSource){
             $this->initMapSource();
@@ -69,12 +86,11 @@ class Gpx2Png
 
         $image = $this->mapSource->getBaseImage();
 
-        $image->drawTrack($this->track, $this->drawParams->track);
-        if (ImageParams::MULTIPLE_INDEX>1){
-            $image->palette->resize($image->palette->getWidth()/ImageParams::MULTIPLE_INDEX);
+        if (!$image){
+            throw new RuntimeException('Cant generate base image');
         }
 
-        $image->palette->smooth(20);
+        $image->drawTrack($this->track, $this->drawParams->track);
 
         return new Result($image);
     }

@@ -7,6 +7,7 @@ namespace Gpx2Png\Test;
 use Gpx2Png\Gpx2Png;
 use Gpx2Png\MapSource\Osm;
 use Gpx2Png\Models\ImageParams;
+use Gpx2Png\Models\Point;
 use Gpx2Png\TrackSource\File;
 use PHPUnit\Framework\TestCase;
 
@@ -31,10 +32,32 @@ class GenerationTest extends TestCase
 
     public function testGenerateFromFile()
     {
-        $filepath = __DIR__."/fixtures/strava_track_03.gpx";
+        $filepath = __DIR__."/fixtures/strava_track_01.gpx";
 
         $gpx2png = new Gpx2Png();
         $gpx2png->loadFile($filepath);
+        $image = $gpx2png->generateImage();
+
+        $this->assertFalse($image==false);
+    }
+
+    public function testGenerateFromPoints()
+    {
+        $filepath = __DIR__."/fixtures/strava_track_01.gpx";
+        $gpx2png = new Gpx2Png();
+        $gpx2png->loadFile($filepath);
+
+        $track = $gpx2png->getTrack();
+
+        unset($gpx2png);
+        $gpx2png = new Gpx2Png();
+        $points = array();
+
+        foreach ($track->points as $point) {
+            $points[] = new Point($point->latitude, $point->longitude);
+        }
+
+        $gpx2png->loadPoints($points);
         $image = $gpx2png->generateImage();
 
         $this->assertFalse($image==false);
@@ -50,7 +73,7 @@ class GenerationTest extends TestCase
 
         $zoom = $this->invokeMethod($osmSource, 'getAutoZoom');
 
-        $this->assertEquals(15, $zoom);
+        $this->assertEquals(16, $zoom, '', 1);
     }
 
 }

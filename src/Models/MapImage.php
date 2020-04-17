@@ -20,12 +20,12 @@ class MapImage
     /**
      * @var Point
      */
-    public $leftTopPoint;
+    private $leftTopPoint;
 
     /**
      * @var Point
      */
-    public $rightBottomPoint;
+    private $rightBottomPoint;
 
     private $pixelDistance;
 
@@ -43,11 +43,18 @@ class MapImage
         return $pointXY;
     }
 
-    public function updatePixelLatLonParams(){
+    private function updatePixelLatLonParams(){
         $paletteWidth = $this->palette->getWidth();
         $paletteDistance = $this->leftTopPoint->getDistanceToPoint(new Point($this->leftTopPoint->latitude, $this->rightBottomPoint->longitude));
 
         $this->pixelDistance = $paletteDistance / $paletteWidth;
+    }
+
+    public function setBoundPoints(Point $leftTopPoint, Point $rightBottomPoint){
+        $this->leftTopPoint = $leftTopPoint;
+        $this->rightBottomPoint = $rightBottomPoint;
+
+        $this->updatePixelLatLonParams();
     }
 
     private function createOverlayPalette(){

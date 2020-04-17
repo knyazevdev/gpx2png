@@ -26,8 +26,7 @@ class File implements SourceInterface{
         $prev_point = null;
         $total_distance = 0;
         foreach ($points as $point) {
-            $track_point = new Point($point->latitude, $point->longitude);
-            $track_point->time = date('Y-m-d H:i:s', $point->time->getTimestamp());
+            $track_point = new Point($point->latitude, $point->longitude, $point->time->getTimestamp());
             $track_point->elevation = $point->elevation;
 
             $total_distance += !is_null($prev_point) ? round(GeoHelper::getDistance($point, $prev_point)) : 0;
