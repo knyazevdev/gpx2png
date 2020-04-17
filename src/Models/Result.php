@@ -46,4 +46,10 @@ class Result
         $this->prepare();
         $this->image->palette->toDownload($filename);
     }
+
+    public function data()
+    {
+        $this->prepare();
+        $this->image->palette->toString();
+    }
 }
