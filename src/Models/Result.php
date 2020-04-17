@@ -22,7 +22,7 @@ class Result
         if (ImageParams::MULTIPLE_INDEX>1){
             $this->image->palette->resize($this->image->palette->getWidth()/ImageParams::MULTIPLE_INDEX);
         }
-        $this->image->palette->smooth(20);
+
     }
 
     public function saveToFile($filename)
