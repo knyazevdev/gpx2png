@@ -19,9 +19,6 @@ class Result
     }
 
     private function prepare(){
-        if (ImageParams::MULTIPLE_INDEX>1){
-            $this->image->palette->resize($this->image->palette->getWidth()/ImageParams::MULTIPLE_INDEX);
-        }
 
     }
 

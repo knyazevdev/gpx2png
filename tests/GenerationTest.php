@@ -41,6 +41,21 @@ class GenerationTest extends TestCase
         $this->assertFalse($image==false);
     }
 
+    public function testIllegalCustomMapSource()
+    {
+        $filepath = __DIR__."/fixtures/strava_track_01.gpx";
+
+        $gpx2png = new Gpx2Png();
+        $gpx2png->loadFile($filepath);
+
+        try{
+            $gpx2png->setMapSourceName('test');
+            $this->assertTrue(false);
+        }catch(Exception $e){
+            $this->assertTrue(true);
+        }
+    }
+
     public function testGenerateFromPoints()
     {
         $filepath = __DIR__."/fixtures/strava_track_01.gpx";
@@ -59,6 +74,21 @@ class GenerationTest extends TestCase
 
         $gpx2png->loadPoints($points);
         $image = $gpx2png->generateImage();
+
+        $this->assertFalse($image==false);
+    }
+
+    public function testGenerateFromOnePoint()
+    {
+        $gpx2png = new Gpx2Png();
+        $points = array(
+            new Point(56.4244756, 47.7069989)
+        );
+
+        $gpx2png->loadPoints($points);
+        $gpx2png->drawParams->track->endPoint->visible = 0;
+        $image = $gpx2png->generateImage();
+        $image->saveToFile("test_02.png");
 
         $this->assertFalse($image==false);
     }

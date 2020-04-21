@@ -12,8 +12,9 @@ abstract class TileMapSource implements MapSourceInterface
     const ZOOM_MODE_AUTO = 'auto';
     const ZOOM_MODE_MANUAL = 'manual';
 
-    public $zoom_mode;
-    public $zoom_value;
+    public $zoomMode;
+    public $zoomValue;
+    public $imageDetailsIndex = 1;
 
     protected $tilesDir;
 
@@ -34,6 +35,10 @@ abstract class TileMapSource implements MapSourceInterface
         $this->setTilesDirectory(sys_get_temp_dir().'/tiles');
     }
 
+    public function setImageDetailsIndex($index){
+        $this->imageDetailsIndex = $index;
+    }
+
     public function setTilesDirectory($directory)
     {
         $this->tilesDir = $directory;
@@ -41,12 +46,12 @@ abstract class TileMapSource implements MapSourceInterface
 
     public function setZoom($zoom_value){
         if ($zoom_value==0){
-            $this->zoom_mode = self::ZOOM_MODE_AUTO;
+            $this->zoomMode = self::ZOOM_MODE_AUTO;
         }else{
-            $this->zoom_mode = self::ZOOM_MODE_MANUAL;
+            $this->zoomMode = self::ZOOM_MODE_MANUAL;
         }
 
-        $this->zoom_value = $zoom_value;
+        $this->zoomValue = $zoom_value;
     }
 
     public function getBaseImage()
