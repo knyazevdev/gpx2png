@@ -18,7 +18,7 @@ class DrawParamsLabel
         switch ($template){
             case self::TPL_KM_LABEL:
                 $this->text_color = "black";
-                $this->text_size = 14;
+                $this->text_size = 13;
                 $this->opacity = 0.9;
                 $this->border_color = "black";
                 $this->bg_color = "white";
