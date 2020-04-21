@@ -10,6 +10,7 @@ use Gpx2Png\Models\Track;
 
 use InvalidArgumentException;
 use RuntimeException;
+use Exception;
 
 class Gpx2Png
 {
@@ -40,11 +41,21 @@ class Gpx2Png
         $this->drawParams = new DrawParams();
     }
 
+    /**
+     * @throws Exception
+     */
     public function setMapSourceName($name){
         $this->mapSourceName = $name;
-        $this->initMapSource();
+        try {
+            $this->initMapSource();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
+    /**
+     * @throws Exception
+     */
     private function initMapSource(){
         if (preg_match_all("/_(\w{1})/", $this->mapSourceName, $matches)){
             foreach ($matches[0] as $i => $item) {
@@ -52,6 +63,9 @@ class Gpx2Png
             }
         }
         $name = __NAMESPACE__."\\MapSource\\".ucfirst($this->mapSourceName);
+        if (!class_exists($name)){
+            throw new Exception('Unknown map source');
+        }
         $this->mapSource = new $name($this->track, $this->imageParams);
     }
 
@@ -81,7 +95,11 @@ class Gpx2Png
 
     public function generateImage(){
         if (!$this->mapSource){
-            $this->initMapSource();
+            try {
+                $this->initMapSource();
+            } catch (Exception $e) {
+                throw new RuntimeException('Cant generate base image');
+            }
         }
 
         $image = $this->mapSource->getBaseImage();

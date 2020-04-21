@@ -23,7 +23,7 @@ class Osm extends TileMapSource {
         $bounds = $this->track->getBounds();
         $maxSideDistance = $bounds->getMaxSideDistance();
 
-        $minTilesNumberOnAxis = ceil(max($this->imageParams->width, $this->imageParams->height) / self::TILE_SIZE);
+        $minTilesNumberOnAxis = ceil(max($this->imageDetailsIndex*$this->imageParams->width, $this->imageDetailsIndex*$this->imageParams->height) / self::TILE_SIZE);
 
         $distanceForOneTile = $maxSideDistance/$minTilesNumberOnAxis;
 
@@ -41,10 +41,10 @@ class Osm extends TileMapSource {
      * @return array[][]
      */
     protected function getTilesSet(){
-        if ($this->zoom_mode==self::ZOOM_MODE_AUTO){
+        if ($this->zoomMode==self::ZOOM_MODE_AUTO){
             $zoom = $this->getAutoZoom();
         }else{
-            $zoom = $this->zoom_value;
+            $zoom = $this->zoomValue;
         }
 
         $bounds = $this->track->getBounds();
@@ -123,6 +123,10 @@ class Osm extends TileMapSource {
                     $img->overlay($tilePath, 'top left', 1, $k*256, $i*256);
                 }
             }
+        }
+
+        if ($this->imageDetailsIndex>1){
+            $img->resize($img->getWidth()/$this->imageDetailsIndex);
         }
 
         $mapImage->palette = $img;

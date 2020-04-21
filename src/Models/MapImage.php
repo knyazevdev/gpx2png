@@ -74,7 +74,7 @@ class MapImage
             if ($distanceToPrevPoint >=50){
                 $xyFrom = $this->getPointXY($prevPoint);
                 $xyTo = $this->getPointXY($point);
-                $overlayPalette->line($xyFrom->x, $xyFrom->y, $xyTo->x, $xyTo->y, $drawParams->color, ImageParams::MULTIPLE_INDEX*$drawParams->width);
+                $overlayPalette->line($xyFrom->x, $xyFrom->y, $xyTo->x, $xyTo->y, $drawParams->color, $drawParams->width);
 
                 $prevPoint = $point;
             }
@@ -101,7 +101,7 @@ class MapImage
                     $distanceLabelsFrequency = $drawParams->distanceLabelsFrequency;
                     $kmLabelValue = floor($point->distance/ $distanceLabelsFrequency);
                     if ($point->distance>$kmLabelValue*$distanceLabelsFrequency && $prevPoint->distance<$kmLabelValue*$distanceLabelsFrequency){
-                        $overlayPalette->ellipse($xyTo->x, $xyTo->y, 2*ImageParams::MULTIPLE_INDEX*$drawParams->width, 2*ImageParams::MULTIPLE_INDEX*$drawParams->width, $drawParams->distanceLabel->text_color, 'filled');
+                        $overlayPalette->ellipse($xyTo->x, $xyTo->y, 2 * $drawParams->width, 2 * $drawParams->width, $drawParams->distanceLabel->text_color, 'filled');
                         $this->drawLabel($point, $kmLabelValue*$distanceLabelsFrequency/1000, $drawParams->distanceLabel);
                     }
 
@@ -128,11 +128,11 @@ class MapImage
         $xy = $this->getPointXY($point);
 
         if ($drawParams->border_width){
-            $size = ImageParams::MULTIPLE_INDEX * (2 * $drawParams->radius+$drawParams->border_width);
+            $size = (2 * $drawParams->radius+$drawParams->border_width);
             $overlayPalette->ellipse($xy->x, $xy->y, $size, $size, $drawParams->border_color, 'filled');
         }
 
-        $size = ImageParams::MULTIPLE_INDEX * 2 * $drawParams->radius;
+        $size = 2 * $drawParams->radius;
         $overlayPalette->ellipse($xy->x, $xy->y, $size, $size, $drawParams->color, 'filled');
 
         $this->palette->overlay($overlayPalette, 'center', $drawParams->opacity);
@@ -146,7 +146,7 @@ class MapImage
 
         try{
             $overlayPalette->text($text, array(
-                'size'=>ImageParams::MULTIPLE_INDEX*$drawParams->text_size,
+                'size'=>$drawParams->text_size,
                 'color'=>$drawParams->text_color,
                 'fontFile'=>__DIR__.'/../files/fonts/ptsans-webfont.ttf',
                 'anchor'=>'top left',
@@ -155,7 +155,7 @@ class MapImage
             ), $boundary);
 
             if ($drawParams->border_width){
-                $overlayPalette->roundedRectangle($boundary['x1']-6, $boundary['y1']-6, $boundary['x2']+10, $boundary['y2']+4, 3, $drawParams->border_color, ImageParams::MULTIPLE_INDEX*$drawParams->border_width);
+                $overlayPalette->roundedRectangle($boundary['x1']-6, $boundary['y1']-6, $boundary['x2']+10, $boundary['y2']+4, 3, $drawParams->border_color, $drawParams->border_width);
             }
         }catch (Exception $e){
 

@@ -3,6 +3,8 @@
 
 namespace Gpx2Png\Models;
 
+use Gpx2Png\Helper\Geo;
+
 class Bounds
 {
     public $minLat;
@@ -48,6 +50,22 @@ class Bounds
                 }
             }
         }
+    }
+
+    /**
+     * @param Point $point
+     */
+    public function setByOnePoint($point)
+    {
+        $distanceOneDeg = 2 * M_PI * Geo::EARTH_RADIUS / 360 * cos(deg2rad($point->longitude));
+        $distanceToOneSide = 2000;
+
+        $this->maxLat = $point->latitude + $distanceToOneSide/$distanceOneDeg;
+        $this->minLat = $point->latitude -  $distanceToOneSide/$distanceOneDeg;
+        $this->minLon = $point->longitude - 2 * $distanceToOneSide/$distanceOneDeg;
+        $this->maxLon = $point->longitude + 2 * $distanceToOneSide/$distanceOneDeg;
+
+        $this->setInited();
     }
 
     public function getMaxSideDistance()

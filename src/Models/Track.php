@@ -22,7 +22,11 @@ class Track
     public function getBounds()
     {
         $bounds = new Bounds();
-        $bounds->setByPointsSet($this->points);
+        if (count($this->points)==1){
+            $bounds->setByOnePoint($this->points[0]);
+        }else{
+            $bounds->setByPointsSet($this->points);
+        }
 
         return $bounds;
     }
