@@ -23,7 +23,7 @@ class Osm extends TileMapSource {
         $bounds = $this->track->getBounds();
         $maxSideDistance = $bounds->getMaxSideDistance();
 
-        $minTilesNumberOnAxis = ceil(max($this->imageDetailsIndex*$this->imageParams->width, $this->imageDetailsIndex*$this->imageParams->height) / self::TILE_SIZE);
+        $minTilesNumberOnAxis = ceil(max($this->imageDetailsIndex*$this->imageParams->max_width, $this->imageDetailsIndex*$this->imageParams->max_height) / self::TILE_SIZE);
 
         $distanceForOneTile = $maxSideDistance/$minTilesNumberOnAxis;
 
@@ -32,7 +32,8 @@ class Osm extends TileMapSource {
          */
 
         $latitude_rad = deg2rad($bounds->minLat);
-        $zoom = floor(log(self::EARTH_EQUATORIAL_CIRCUMFERENCE*cos($latitude_rad) / $distanceForOneTile, 2))    ;
+        $zoom = floor(log(self::EARTH_EQUATORIAL_CIRCUMFERENCE*cos($latitude_rad) / $distanceForOneTile, 2)) ;
+
 
         return $zoom;
     }
@@ -53,6 +54,12 @@ class Osm extends TileMapSource {
         $tile_from = $this->getTileForPoint(new Point($bounds->maxLat, $bounds->minLon), $zoom);
         $tile_to = $this->getTileForPoint(new Point($bounds->minLat, $bounds->maxLon), $zoom);
 
+        if (abs($tile_from->x - $tile_to->x) < ceil($this->imageParams->max_width/self::TILE_SIZE)){
+            $tile_to->x += ceil($this->imageParams->max_width/self::TILE_SIZE) - abs($tile_from->x - $tile_to->x);
+        }
+        if (abs($tile_from->y - $tile_to->y) < ceil($this->imageParams->max_height/self::TILE_SIZE)){
+            $tile_to->y += ceil($this->imageParams->max_height/self::TILE_SIZE) - abs($tile_from->y - $tile_to->y);
+        }
         for ($y=$tile_from->y; $y<=$tile_to->y; $y++){
             if (!isset($tiles[$y])){
                 $tiles[$y] = array();
@@ -125,8 +132,12 @@ class Osm extends TileMapSource {
             }
         }
 
-        if ($this->imageDetailsIndex>1){
+        /*if ($this->imageDetailsIndex>1){
             $img->resize($img->getWidth()/$this->imageDetailsIndex);
+        }*/
+
+        if ($img->getWidth() > $this->imageParams->max_width){
+            $img->resize($this->imageParams->max_width);
         }
 
         $mapImage->palette = $img;
@@ -148,7 +159,8 @@ class Osm extends TileMapSource {
     public function getBaseImage()
     {
         try{
-            $image = $this->mergeTilesSet($this->getTilesSet());
+            $tilesSet = $this->getTilesSet();
+            $image = $this->mergeTilesSet($tilesSet);
         }catch (Exception $e){
 
         }

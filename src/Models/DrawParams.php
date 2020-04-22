@@ -13,6 +13,8 @@ class DrawParams
      */
     public $track;
 
+    public $autoCropToBounds = 1;
+
     public function __construct()
     {
         $this->track = new DrawParamsTrack();

@@ -150,8 +150,8 @@ class MapImage
                 'color'=>$drawParams->text_color,
                 'fontFile'=>__DIR__.'/../files/fonts/ptsans-webfont.ttf',
                 'anchor'=>'top left',
-                'xOffset'=>$xy->x+10,
-                'yOffset'=>$xy->y+10
+                'xOffset'=>$xy->x+6,
+                'yOffset'=>$xy->y+6
             ), $boundary);
 
             if ($drawParams->border_width){
@@ -163,6 +163,34 @@ class MapImage
 
 
         $this->palette->overlay($overlayPalette, 'center', $drawParams->opacity);
+    }
+
+    public function cropToBounds(Bounds $bounds, ImageParams $imageParams){
+        $xy_from = $this->getPointXY(new Point($bounds->minLat, $bounds->minLon));
+        $xy_to = $this->getPointXY(new Point($bounds->maxLat, $bounds->maxLon));
+        $x_used = abs($xy_from->x - $xy_to->x);
+        $y_used = abs($xy_from->y - $xy_to->y);
+
+        $paletteWidth = $this->palette->getWidth();
+        $paletteHeight = $this->palette->getHeight();
+        if ($paletteWidth > $x_used || $paletteHeight > $y_used){
+            $x_from_free_space = min($xy_from->x, $xy_to->x);
+            $x_to_free_space = $paletteWidth - max($xy_from->x, $xy_to->x);
+            $x_free_space_diff = $x_from_free_space - $x_to_free_space;
+
+            $y_from_free_space = min($xy_from->y, $xy_to->y);
+            $y_to_free_space = $paletteHeight - max($xy_from->y, $xy_to->y);
+            $y_free_space_diff = $y_from_free_space - $y_to_free_space;
+
+            $x0 = max(0, ($paletteWidth + $x_free_space_diff - $x_used)/2 - $imageParams->padding);
+            $x1 = min($x_used + ($paletteWidth + $x_free_space_diff - $x_used)/2 + $imageParams->padding, $paletteWidth);
+
+            $y0 = max(0, ($paletteHeight + $y_free_space_diff - $y_used)/2 - $imageParams->padding);
+            $y1 = min($y_used + ($paletteHeight + $y_free_space_diff - $y_used)/2 + $imageParams->padding, $paletteHeight);
+
+            $this->palette->crop($x0, $y0, $x1, $y1);
+        }
+
     }
 
 

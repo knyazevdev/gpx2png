@@ -109,6 +109,9 @@ class Gpx2Png
         }
 
         $image->drawTrack($this->track, $this->drawParams->track);
+        if ($this->drawParams->autoCropToBounds){
+            $image->cropToBounds($this->track->getBounds(), $this->imageParams);
+        }
 
         return new Result($image);
     }
