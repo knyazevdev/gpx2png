@@ -8,7 +8,7 @@ class ImageParams
 {
     const DEFAULT_WIDTH = 1024;
     const DEFAULT_HEIGHT = 1024;
-    const DEFAULT_PADDING = 20;
+    const DEFAULT_PADDING = 50;
 
     public $max_width;
     public $max_height;
