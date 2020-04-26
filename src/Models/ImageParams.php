@@ -6,8 +6,8 @@ namespace Gpx2Png\Models;
 
 class ImageParams
 {
-    const DEFAULT_WIDTH = 1024;
-    const DEFAULT_HEIGHT = 1024;
+    const DEFAULT_WIDTH = 1200;
+    const DEFAULT_HEIGHT = 1200;
     const DEFAULT_PADDING = 50;
 
     public $max_width;
