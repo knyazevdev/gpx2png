@@ -68,10 +68,11 @@ class MapImage
         $prevPoint = $track->getFirstPoint();
         $overlayPalette = $this->createOverlayPalette();
 
+        $minDistanceBetweenPoints = 50;
         foreach ($track->points as $i => $point) {
             $distanceToPrevPoint = $point->getDistanceToPoint($prevPoint);
 
-            if ($distanceToPrevPoint >=10){
+            if ($distanceToPrevPoint >= $minDistanceBetweenPoints){
                 $xyFrom = $this->getPointXY($prevPoint);
                 $xyTo = $this->getPointXY($point);
                 $overlayPalette->line($xyFrom->x, $xyFrom->y, $xyTo->x, $xyTo->y, $drawParams->color, $drawParams->width);
@@ -95,7 +96,7 @@ class MapImage
                     }
                 }
 
-                if ($distanceToPrevPoint >=50){
+                if ($distanceToPrevPoint >= $minDistanceBetweenPoints){
                     $xyTo = $this->getPointXY($point);
 
                     $distanceLabelsFrequency = $drawParams->distanceLabelsFrequency;
