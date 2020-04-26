@@ -32,7 +32,7 @@ class GenerationTest extends TestCase
 
     public function testGenerateFromFile()
     {
-        $filepath = __DIR__."/fixtures/strava_track_02.gpx";
+        $filepath = __DIR__."/fixtures/strava_track_04.gpx";
 
         $gpx2png = new Gpx2Png();
         $gpx2png->loadFile($filepath);

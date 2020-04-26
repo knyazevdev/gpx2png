@@ -71,7 +71,7 @@ class MapImage
         foreach ($track->points as $i => $point) {
             $distanceToPrevPoint = $point->getDistanceToPoint($prevPoint);
 
-            if ($distanceToPrevPoint >=50){
+            if ($distanceToPrevPoint >=10){
                 $xyFrom = $this->getPointXY($prevPoint);
                 $xyTo = $this->getPointXY($point);
                 $overlayPalette->line($xyFrom->x, $xyFrom->y, $xyTo->x, $xyTo->y, $drawParams->color, $drawParams->width);
