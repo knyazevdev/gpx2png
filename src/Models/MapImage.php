@@ -68,7 +68,7 @@ class MapImage
         $prevPoint = $track->getFirstPoint();
         $overlayPalette = $this->createOverlayPalette();
 
-        $minDistanceBetweenPoints = 50;
+        $minDistanceBetweenPoints = 10;
         foreach ($track->points as $i => $point) {
             $distanceToPrevPoint = $point->getDistanceToPoint($prevPoint);
 
