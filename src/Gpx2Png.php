@@ -29,7 +29,7 @@ class Gpx2Png
     /**
      * @var ImageParams
      */
-    private $imageParams;
+    public $imageParams;
 
     /**
      * @var DrawParams

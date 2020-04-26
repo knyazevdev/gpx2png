@@ -25,15 +25,14 @@ class Osm extends TileMapSource {
 
         $minTilesNumberOnAxis = ceil(max($this->imageDetailsIndex*$this->imageParams->max_width, $this->imageDetailsIndex*$this->imageParams->max_height) / self::TILE_SIZE);
 
-        $distanceForOneTile = $maxSideDistance/$minTilesNumberOnAxis;
+        $distanceForOneTile = $maxSideDistance/($minTilesNumberOnAxis+1);
 
         /**
          * https://wiki.openstreetmap.org/wiki/Zoom_levels
          */
 
         $latitude_rad = deg2rad($bounds->minLat);
-        $zoom = floor(log(self::EARTH_EQUATORIAL_CIRCUMFERENCE*cos($latitude_rad) / $distanceForOneTile, 2)) ;
-
+        $zoom = floor(log(self::EARTH_EQUATORIAL_CIRCUMFERENCE*cos($latitude_rad) / $distanceForOneTile, 2));
 
         return $zoom;
     }
@@ -54,11 +53,22 @@ class Osm extends TileMapSource {
         $tile_from = $this->getTileForPoint(new Point($bounds->maxLat, $bounds->minLon), $zoom);
         $tile_to = $this->getTileForPoint(new Point($bounds->minLat, $bounds->maxLon), $zoom);
 
+        /*if ($this->zoomMode==self::ZOOM_MODE_AUTO && (abs($tile_from->x - $tile_to->x)) < ceil($this->imageParams->max_width/self::TILE_SIZE)){
+            $this->setZoom($zoom+1);
+            return $this->getTilesSet();
+        }*/
+
         if (abs($tile_from->x - $tile_to->x) < ceil($this->imageParams->max_width/self::TILE_SIZE)){
-            $tile_to->x += ceil($this->imageParams->max_width/self::TILE_SIZE) - abs($tile_from->x - $tile_to->x);
+            $diff = ceil($this->imageParams->max_width / self::TILE_SIZE) - abs($tile_from->x - $tile_to->x);
+            $pairsNumber = intval(floor($diff/2));
+            $tile_from->x -= $pairsNumber;
+            $tile_to->x += $diff-$pairsNumber;
         }
         if (abs($tile_from->y - $tile_to->y) < ceil($this->imageParams->max_height/self::TILE_SIZE)){
-            $tile_to->y += ceil($this->imageParams->max_height/self::TILE_SIZE) - abs($tile_from->y - $tile_to->y);
+            $diff = ceil($this->imageParams->max_height/self::TILE_SIZE) - abs($tile_from->y - $tile_to->y);
+            $pairsNumber = intval(floor($diff/2));
+            $tile_from->y -= $pairsNumber;
+            $tile_to->y += $diff-$pairsNumber;
         }
         for ($y=$tile_from->y; $y<=$tile_to->y; $y++){
             if (!isset($tiles[$y])){
@@ -138,6 +148,10 @@ class Osm extends TileMapSource {
 
         if ($img->getWidth() > $this->imageParams->max_width){
             $img->resize($this->imageParams->max_width);
+        }
+
+        if ($img->getHeight() > $this->imageParams->max_height){
+            $img->resize(null, $this->imageParams->max_height);
         }
 
         $mapImage->palette = $img;
