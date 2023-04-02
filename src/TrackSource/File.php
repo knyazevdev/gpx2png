@@ -29,7 +29,7 @@ class File implements SourceInterface{
             $track_point = new Point($point->latitude, $point->longitude, $point->time->getTimestamp());
             $track_point->elevation = $point->elevation;
 
-            $total_distance += !is_null($prev_point) ? round(GeoHelper::getDistance($point, $prev_point)) : 0;
+            $total_distance += !is_null($prev_point) ? round(GeoHelper::getRawDistance($point, $prev_point)) : 0;
             $track_point->distance = $total_distance;
             $track->points[] = $track_point;
 
